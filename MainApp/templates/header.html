@@ -1,72 +1,35 @@
 {% load static %}
+<html lang="ru" data-theme="{{ theme }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="{% static '/css/header.css' %}">
-  <script  src = "{% static '/js/header1.js' %}"></script>
   <title>{% block title %}Test/it{% endblock %}</title>
-  {% comment %} {# --- Тема применяется до отрисовки, чтобы не было мигания --- #}
-  <script>
-    (function () {
-      const saved = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
-    })();
-  </script> {% endcomment %}
-  
-  <script>
-    console.log("Проверка")
-  </script>
-  
   {% block extra_head %}{% endblock %}
 </head>
-<body>
 
-  <header class="site-header">
-    <a href="{}" class="logo">
-      Test<span class="logo-slash">/</span>it
-    </a>
+<header class="site-header">
+  <a href="{}" class="logo">
+    Test<span class="logo-slash">/</span>it
+  </a>
 
-    <nav class="nav">
-      <a href="{}"
-         class="{% if request.resolver_match.url_name == 'quiz_list' %}is-active{% endif %}">
-        Главная
-      </a>
-      <a href="{}"
-         class="{% if request.resolver_match.url_name == 'quiz_new' %}is-active{% endif %}">
-        Создание тестов
-      </a>
-      <a href="{}#solve"
-         class="{% if request.resolver_match.url_name == 'quiz_take' %}is-active{% endif %}">
-        Решение тестов
-      </a>
-    </nav>
+  <nav class="nav">
+    <a href="">Главная</a>
+    <a href="">Создание тестов</a>
+    <a href="">Решение тестов</a>
+  </nav>
 
-    <button type="button" class="theme-toggle" id="theme-toggle"
-            aria-label="Переключить тему" title="Переключить тему">
-      <span class="icon-moon">🌙</span>
-      <span class="icon-sun">☀️</span>
-    </button>
-  </header>
-
-  <main class="container">
-    {% block content %}{% endblock %}
-  </main>
-
-  {% comment %} <script>
-    (function () {
-      const btn = document.getElementById('theme-toggle');
-      if (!btn) return;
-      btn.addEventListener('click', () => {
-        const root = document.documentElement;
-        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-        root.dataset.theme = next;
-        localStorage.setItem('theme', next);
-      });
-    })();
-  </script> {% endcomment %}
-  
-  <script  src = "{% static '/js/header2.js' %}"></script>
-  {% block extra_scripts %}{% endblock %}
-</body>
+  {# --- Переключатель темы --- #}
+  <form method="post" action="{% url 'set_theme' %}" class="theme-form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    {% if theme == "dark" %}
+      <input type="hidden" name="theme" value="light">
+      <button type="submit" class="theme-toggle" title="Светлая тема">☀️</button>
+    {% else %}
+      <input type="hidden" name="theme" value="dark">
+      <button type="submit" class="theme-toggle" title="Тёмная тема">🌙</button>
+    {% endif %}
+  </form>
+</header>
