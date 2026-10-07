@@ -1,0 +1,109 @@
+{% load static %}
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static '/css/questionCreation.css' %}">
+</head>
+
+<h1>{% if quiz_id %}Редактирование теста{% else %}Новый тест{% endif %}</h1>
+
+<form method="post" id="quiz-form">
+  {% csrf_token %}
+
+  {# ---------- Общие поля ---------- #}
+  <div class="meta">
+    <label>Название
+      <input type="text" name="title" value="{{ test.title|default:'' }}" required>
+    </label>
+    <label>Описание
+      <textarea name="description">{{ test.description|default:'' }}</textarea>
+    </label>
+    <label>Лимит времени (сек, 0 = без лимита)
+      <input type="number" name="time_limit_sec" min="0"
+             value="{{ test.time_limit_sec|default:0 }}">
+    </label>
+    <label>Проходной балл (%)
+      <input type="number" name="pass_score" min="0" max="100"
+             value="{{ test.pass_score|default:70 }}">
+    </label>
+  </div>
+
+  <hr>
+
+  {# ---------- Контейнер вопросов ---------- #}
+  <div id="questions"></div>
+
+  <button type="button" id="add-question" class="btn">+ Добавить вопрос</button>
+  <button type="button" id="save-quiz" class="btn btn-primary">Сохранить в файл</button>
+
+  <script src="{% static '/js/saveJSON.js' %}"></script>
+  {# --- Статус сохранения / ошибок --- #}
+  <p id="save-status" class="save-status" hidden></p>
+</form>
+
+{# ---------- Шаблон блока вопроса (скрытый) ---------- #}
+<template id="question-template">
+  <div class="question-block" data-index="__i__">
+    <div class="question-header">
+      <strong>Вопрос <span class="q-number"></span></strong>
+      <button type="button" class="remove-question">Удалить</button>
+    </div>
+
+    <label>Тип
+      <select name="questions-__i__-type" class="q-type">
+        <option value="single">Один ответ</option>
+        <option value="multiple">Несколько ответов</option>
+        <option value="text">Текстовый ответ</option>
+      </select>
+    </label>
+
+    <label>Текст вопроса
+      <textarea name="questions-__i__-text" required></textarea>
+    </label>
+
+    <label>Баллы
+      <input type="number" name="questions-__i__-points" value="1" min="1">
+    </label>
+
+    {# --- Варианты для single/multiple --- #}
+    <div class="options-section">
+      <p class="hint">
+        <span class="hint-single">Отметьте <b>один</b> правильный ответ.</span>
+        <span class="hint-multiple" hidden>Отметьте <b>все</b> правильные ответы.</span>
+      </p>
+      <div class="options-list"></div>
+      <button type="button" class="add-option">+ Вариант</button>
+      <input type="hidden" name="questions-__i__-options-count" value="0" class="options-count">
+    </div>
+
+    {# --- Текстовые ответы --- #}
+    <div class="text-answers-section" hidden>
+      <p class="hint">Все перечисленные ответы считаются правильными (синонимы).</p>
+      <div class="text-answers-list"></div>
+      <button type="button" class="add-text-answer">+ Допустимый ответ</button>
+      <input type="hidden" name="questions-__i__-text-answers-count" value="0"
+             class="text-answers-count">
+    </div>
+  </div>
+</template>
+
+{# ---------- Шаблоны внутренних элементов ---------- #}
+<template id="option-template">
+  <div class="option-row">
+    <label class="correct-toggle">
+      <input class="option-correct" type="checkbox"> {# тип меняется в JS #}
+      <span class="correct-label">правильный</span>
+    </label>
+    <input type="text" class="option-text" placeholder="Текст варианта">
+    <button type="button" class="remove-option" title="Удалить">×</button>
+  </div>
+</template>
+
+<template id="text-answer-template">
+  <div class="text-answer-row">
+    <input type="text" class="text-answer-input" placeholder="Допустимый ответ">
+    <button type="button" class="remove-text-answer" title="Удалить">×</button>
+  </div>
+</template>
+{% endblock %}
+
+<script src="{% static '/js/questionCreation.js' %}"></script>

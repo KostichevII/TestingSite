@@ -22,6 +22,5 @@ from MainApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("TestGeneration", TemplateView.as_view(template_name="TestGeneration.html")),
-    
     path("set-theme/", views.set_theme, name="set_theme"),
 ]

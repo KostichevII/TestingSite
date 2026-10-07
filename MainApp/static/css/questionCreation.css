@@ -1,0 +1,13 @@
+  .question-block 
+  { border: 1px solid #ccc; padding: 1rem; margin: 1rem 0; border-radius: 8px; }
+  .question-header 
+  { display: flex; justify-content: space-between; margin-bottom: .5rem; }
+  .option-row, .text-answer-row 
+  { display: flex; gap: .5rem; margin: .25rem 0; }
+  .option-text, .text-answer-input { flex: 1; }
+  label 
+  { display: block; margin: .4rem 0; }
+  .btn 
+  { padding: .5rem 1rem; margin: .5rem 0; cursor: pointer; }
+  .btn-primary 
+  { background: #2c7; color: white; border: none; }

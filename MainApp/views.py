@@ -1,7 +1,13 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+import json
+import re
+from django.shortcuts import render
+from django.views.decorators.http import require_POST
+from django.utils.text import slugify
 
+from MainApp.Processors.FileSaver import buildTest
 
 @require_POST
 def set_theme(request):
