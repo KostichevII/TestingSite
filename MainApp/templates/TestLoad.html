@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Загрузка теста — Test/it{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/TestLoad.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="upload-page">
+  <div class="upload-card">
+    <h1>Загрузить тест</h1>
+    <p class="subtitle">
+      Выберите JSON-файл, сгенерированный на странице создания тестов.
+      Правильные ответы расшифруются на сервере.
+    </p>
+
+    {% if error %}
+      <div class="alert alert-error">
+        <strong>Не удалось загрузить:</strong> {{ error }}
+      </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+      {% csrf_token %}
+
+      <label class="file-drop" id="file-drop">
+        {{ form.file }}
+        <span class="file-drop-icon">📄</span>
+        <span class="file-drop-text" id="file-drop-text">
+          Перетащите файл сюда или нажмите, чтобы выбрать
+        </span>
+      </label>
+
+      {% if form.file.errors %}
+        <span class="error">{{ form.file.errors|join:", " }}</span>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary btn-block">
+        Загрузить и начать
+      </button>
+    </form>
+
+    <p class="hint">
+      Нет файла? <a href="{% url 'quiz_create' %}">Создайте тест</a> —
+      после заполнения нажмите «Сохранить в файл».
+    </p>
+  </div>
+</div>
+
+<script>
+  // Обновляем подпись у drop-зоны, когда выбран файл
+  (function () {
+    const input = document.querySelector('#file-drop input[type="file"]');
+    const text = document.getElementById('file-drop-text');
+    if (!input || !text) return;
+    input.addEventListener('change', () => {
+      text.textContent = input.files[0]?.name || 'Файл не выбран';
+    });
+  })();
+</script>
+{% endblock %}

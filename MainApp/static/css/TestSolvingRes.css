@@ -1,0 +1,134 @@
+.result-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+/* --- Итоговый блок --- */
+.result-summary {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 14px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+.result-summary.is-passed {
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-soft));
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+.result-summary.is-failed {
+  background: color-mix(in srgb, #c0392b 10%, var(--bg-soft));
+  border-color: color-mix(in srgb, #c0392b 35%, var(--border));
+}
+
+.result-score {
+  display: flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.result-score-main { font-size: 3rem; font-weight: 700; color: var(--text); }
+.result-score-sep  { font-size: 1.8rem; color: var(--text-muted); margin: 0 .15rem; }
+.result-score-total{ font-size: 1.5rem; color: var(--text-muted); }
+
+.result-meta { flex: 1; }
+.result-percent { font-size: 1.3rem; font-weight: 600; margin: 0 0 .25rem; }
+.result-status  { margin: 0 0 .35rem; font-size: 1rem; }
+.result-pass-mark { margin: 0; font-size: .85rem; color: var(--text-muted); }
+
+.result-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.6rem;
+}
+
+.section-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-weight: 600;
+}
+
+/* --- Разбор --- */
+.details {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.detail {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  background: var(--bg-soft);
+}
+.detail.ok   { border-left: 4px solid var(--accent); }
+.detail.fail { border-left: 4px solid #c0392b; }
+[data-theme="dark"] .detail.fail { border-left-color: #ff6b6b; }
+
+.detail-head {
+  display: flex;
+  align-items: baseline;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+.detail-number {
+  flex: none;
+  width: 1.5rem; height: 1.5rem;
+  border-radius: 50%;
+  background: var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.detail-text { flex: 1; font-weight: 500; }
+.detail-mark {
+  flex: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.detail.ok   .detail-mark { color: var(--accent); }
+.detail.fail .detail-mark { color: #c0392b; }
+[data-theme="dark"] .detail.fail .detail-mark { color: #ff6b6b; }
+
+.detail-body { margin-left: 2.25rem; }
+.detail-line {
+  margin: .25rem 0;
+  font-size: .9rem;
+  display: flex;
+  gap: .5rem;
+  align-items: baseline;
+}
+.detail-label {
+  color: var(--text-muted);
+  min-width: 6.5rem;
+  font-size: .85rem;
+}
+.detail-line code {
+  background: var(--bg);
+  padding: .15rem .5rem;
+  border-radius: 5px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: .85rem;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.detail-points strong { color: var(--text); }
+
+/* --- Кнопки --- */
+.result-actions {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}

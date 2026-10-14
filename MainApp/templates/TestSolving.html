@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static form_extras %}
+
+{% block title %}{{ test.title }} — Test/it{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/TestSolving.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="solve-page">
+
+  <header class="quiz-header">
+    <h1>{{ test.title }}</h1>
+    {% if test.description %}<p class="quiz-description">{{ test.description }}</p>{% endif %}
+
+    <ul class="quiz-meta">
+      <li><span class="meta-label">Вопросов</span><span class="meta-value">{{ test.questions|length }}</span></li>
+      <li><span class="meta-label">Баллов всего</span><span class="meta-value">{{ test.total_points }}</span></li>
+      <li><span class="meta-label">Проходной</span><span class="meta-value">{{ test.pass_score }}%</span></li>
+      {% if test.time_limit_sec %}
+        <li><span class="meta-label">Время</span><span class="meta-value" id="timer">--:--</span></li>
+      {% endif %}
+    </ul>
+
+    <div class="progress-track" aria-hidden="true">
+      <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <form method="post" action="{% url 'quiz_solve' token %}" id="solve-form" class="solve-form" novalidate>
+    {% csrf_token %}
+
+    {% for q in test.questions %}
+      {% with field=form|question_field:q.id %}
+        <fieldset class="question" data-question-id="{{ q.id }}">
+          <legend class="question-title">
+            <span class="question-number">{{ forloop.counter }}</span>
+            <span class="question-text">{{ q.text }}</span>
+            <span class="question-points">{{ q.points }} б.</span>
+          </legend>
+
+          <div class="field-body">{{ field }}</div>
+
+          {% if field.errors %}
+            <p class="error">{{ field.errors|join:", " }}</p>
+          {% endif %}
+        </fieldset>
+      {% endwith %}
+    {% endfor %}
+
+    <div class="submit-bar">
+      <span class="submit-hint" id="answered-info">Отвечено: 0 из {{ test.questions|length }}</span>
+      <button type="submit" class="btn btn-primary">Завершить тест</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  (function () {
+    const form = document.getElementById('solve-form');
+    if (!form) return;
+
+    const total = {{ test.questions|length }};
+    const progressBar = document.getElementById('progress-bar');
+    const answeredInfo = document.getElementById('answered-info');
+
+    function updateProgress() {
+      let answered = 0;
+      document.querySelectorAll('.question').forEach(fs => {
+        const has = !!fs.querySelector('input[type="radio"]:checked') ||
+                 !!fs.querySelector('input[type="checkbox"]:checked') ||
+                 ((fs.querySelector('input[type="text"]')?.value ?? '').trim() !== '');
+        if (has) answered++;
+      });
+      if (progressBar) progressBar.style.width = (answered / total * 100) + '%';
+      if (answeredInfo) answeredInfo.textContent = `Отвечено: ${answered} из ${total}`;
+    }
+
+    form.addEventListener('input', updateProgress);
+    form.addEventListener('change', updateProgress);
+    updateProgress();
+
+    // Таймер (только индикация; серверная проверка — отдельным полем)
+    {% if test.time_limit_sec %}
+      let remaining = {{ test.time_limit_sec }};
+      const timerEl = document.getElementById('timer');
+      function tick() {
+        const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+        const s = String(remaining % 60).padStart(2, '0');
+        timerEl.textContent = `${m}:${s}`;
+        if (remaining <= 0) {
+          form.submit();
+          return;
+        }
+        remaining--;
+        setTimeout(tick, 1000);
+      }
+      tick();
+    {% endif %}
+  })();
+</script>
+{% endblock %}

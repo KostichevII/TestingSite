@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Результат: {{ test.title }} — Test/it{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/TestSolvingRes.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="result-page">
+
+  <header class="result-summary {% if result.passed %}is-passed{% else %}is-failed{% endif %}">
+    <div class="result-score">
+      <span class="result-score-main">{{ result.score }}</span>
+      <span class="result-score-sep">/</span>
+      <span class="result-score-total">{{ result.max_score }}</span>
+    </div>
+    <div class="result-meta">
+      <p class="result-percent">{{ result.percent }}%</p>
+      <p class="result-status">
+        {% if result.passed %}✅ Тест пройден{% else %}❌ Тест не пройден{% endif %}
+      </p>
+      <p class="result-pass-mark">Проходной балл: {{ test.pass_score }}%</p>
+    </div>
+  </header>
+
+  <h1 class="result-title">{{ test.title }}</h1>
+
+  <h2 class="section-title">Разбор ответов</h2>
+
+  <ol class="details">
+    {% for d in result.details %}
+      <li class="detail {% if d.is_correct %}ok{% else %}fail{% endif %}">
+        <div class="detail-head">
+          <span class="detail-number">{{ forloop.counter }}</span>
+          <span class="detail-text">{{ d.question.text }}</span>
+          <span class="detail-mark">
+            {% if d.is_correct %}✓{% else %}✗{% endif %}
+          </span>
+        </div>
+
+        <div class="detail-body">
+          <p class="detail-line">
+            <span class="detail-label">Ваш ответ:</span>
+            <code>{{ d.given|join:", "|default:"—" }}</code>
+          </p>
+          {% if not d.is_correct %}
+            <p class="detail-line">
+              <span class="detail-label">Правильно:</span>
+              <code>{{ d.question.correct|join:", " }}</code>
+            </p>
+          {% endif %}
+          <p class="detail-line detail-points">
+            <span class="detail-label">Баллов:</span>
+            <strong>{{ d.earned }}</strong> / {{ d.max }}
+          </p>
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+
+  <div class="result-actions">
+    <a href="{% url 'quiz_upload' %}" class="btn btn-secondary">Загрузить другой тест</a>
+    <a href="{% url 'quiz_create' %}" class="btn btn-primary">Создать свой тест</a>
+  </div>
+</div>
+{% endblock %}
