@@ -1,35 +1,39 @@
 {% load static %}
-<html lang="ru" data-theme="{{ theme }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="stylesheet" href="{% static '/css/header.css' %}">
-  <title>{% block title %}Test/it{% endblock %}</title>
-  {% block extra_head %}{% endblock %}
-</head>
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 
 <header class="site-header">
-  <a href="{}" class="logo">
+  <a href="" class="logo">
     Test<span class="logo-slash">/</span>it
   </a>
 
   <nav class="nav">
-    <a href="">Главная</a>
-    <a href="">Создание тестов</a>
-    <a href="">Решение тестов</a>
+    <a href=""
+       class="{% if request.resolver_match.url_name == 'main' %}is-active{% endif %}">
+      Главная
+    </a>
+    <a href="{% url 'quiz_create' %}"
+       class="{% if request.resolver_match.url_name == 'quiz_create' %}is-active{% endif %}">
+      Создание тестов
+    </a>
+    <a href="{% url 'quiz_edit_upload' %}"
+       class="{% if request.resolver_match.url_name == 'quiz_edit' %}is-active{% endif %}">
+      Редактирование тестов
+    </a>
+    <a href="{% url 'quiz_upload' %}"
+       class="{% if request.resolver_match.url_name == 'quiz_upload' %}is-active{% endif %}">
+      Решение тестов
+    </a>
   </nav>
 
-  {# --- Переключатель темы --- #}
   <form method="post" action="{% url 'set_theme' %}" class="theme-form">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ request.get_full_path }}">
     {% if theme == "dark" %}
       <input type="hidden" name="theme" value="light">
-      <button type="submit" class="theme-toggle" title="Светлая тема">☀️</button>
+      <button type="submit" class="theme-toggle" title="К светлой теме" aria-label="Светлая тема">🌙</button>
     {% else %}
       <input type="hidden" name="theme" value="dark">
-      <button type="submit" class="theme-toggle" title="Тёмная тема">🌙</button>
+      <button type="submit" class="theme-toggle" title="К тёмной теме" aria-label="Тёмная тема">☀️</button>
     {% endif %}
   </form>
 </header>

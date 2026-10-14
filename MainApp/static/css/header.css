@@ -1,3 +1,5 @@
+/* ---------- Переменные темы ---------- */
+
 :root,
 [data-theme="light"] {
   --bg: #ffffff;
@@ -6,7 +8,10 @@
   --text-muted: #666;
   --border: #e2e4e9;
   --accent: #2c7a4b;
+  --accent-hover: #256a41;
   --header-bg: #ffffff;
+  --header-border: #e2e4e9;
+  --shadow: 0 1px 3px rgba(0, 0, 0, .06);
 }
 
 [data-theme="dark"] {
@@ -16,7 +21,10 @@
   --text-muted: #9aa0a6;
   --border: #2c3038;
   --accent: #4caf72;
+  --accent-hover: #5cbf82;
   --header-bg: #1b1e24;
+  --header-border: #2c3038;
+  --shadow: 0 1px 3px rgba(0, 0, 0, .4);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,26 +35,369 @@
     --text-muted: #9aa0a6;
     --border: #2c3038;
     --accent: #4caf72;
+    --accent-hover: #5cbf82;
     --header-bg: #1b1e24;
+    --header-border: #2c3038;
+    --shadow: 0 1px 3px rgba(0, 0, 0, .4);
   }
+}
+
+/* ---------- Базовое применение переменных ---------- */
+/* Это ключевой блок: без него текст не покрасится */
+
+* { box-sizing: border-box; }
+
+html {
+  color-scheme: light dark;
 }
 
 body {
   margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
   background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, sans-serif;
+  color: var(--text);                    /* ← цвет основного текста */
   transition: background .2s ease, color .2s ease;
 }
 
-.theme-form { margin-left: 1rem; display: inline; }
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+  margin-top: 0;
+}
+
+p, li, td, th, label, span, div {
+  color: inherit;                        /* наследуют от body */
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+code, pre {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* ---------- Шапка ---------- */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: .9rem 1.5rem;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  text-decoration: none;
+  color: var(--text);                    /* ← цвет логотипа */
+  white-space: nowrap;
+  user-select: none;
+  transition: opacity .15s;
+}
+.logo:hover { opacity: .8; text-decoration: none; }
+
+.logo .logo-slash {
+  color: var(--accent);
+  margin: 0 .1em;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  gap: 1.25rem;
+  margin-left: auto;
+  align-items: center;
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--text-muted);              /* ← цвет ссылок в меню */
+  font-size: .95rem;
+  padding: .25rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+
+.nav a:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav a.is-active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+.theme-form {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+}
+
 .theme-toggle {
-  width: 38px; height: 38px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--bg-soft);
-  color: var(--text);
+  color: var(--text);                    /* ← цвет иконки */
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.1rem;
+  line-height: 1;
+  padding: 0;
+  transition: background .15s, border-color .15s, transform .15s;
 }
-.theme-toggle:hover { background: var(--border); }
+.theme-toggle:hover { background: var(--border); transform: rotate(15deg); }
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Контейнер ---------- */
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* ---------- Кнопки (на всякий случай) ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  padding: .55rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: .95rem;
+  font-family: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); text-decoration: none; color: #fff; }
+.btn-secondary {
+  background: var(--bg-soft); color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--border); text-decoration: none; color: var(--text); }
+
+/* ---------- Адаптив ---------- */
+
+@media (max-width: 720px) {
+  .site-header { gap: 1rem; padding: .7rem 1rem; }
+  .nav { gap: .8rem; }
+  .nav a { font-size: .85rem; }
+  .logo { font-size: 1.1rem; }
+}
+
+@media (max-width: 520px) {
+  .site-header { flex-wrap: wrap; gap: .5rem 1rem; }
+  .nav {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+    gap: .5rem;
+  }
+  .theme-form { margin-left: auto; }
+}
+
+html {
+  color-scheme: light dark;
+}
+
+/* ---------- Базовое поле ---------- */
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+textarea,
+select {
+  width: 100%;
+  padding: .55rem .75rem;
+  font-family: inherit;
+  font-size: .95rem;
+  line-height: 1.4;
+  color: var(--text);                    /* цвет вводимого текста */
+  background: var(--bg);                 /* фон поля */
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Плейсхолдер — приглушённый, но различимый */
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: .7;
+}
+
+/* Фокус — рамка и мягкое свечение в цвет акцента */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* Наведение — лёгкая подсветка рамки */
+input:hover:not(:focus):not(:disabled),
+textarea:hover:not(:focus):not(:disabled),
+select:hover:not(:focus):not(:disabled) {
+  border-color: color-mix(in srgb, var(--border) 60%, var(--accent));
+}
+
+/* Отключённое поле */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background: var(--bg-soft);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: .8;
+}
+
+/* Ошибка валидации */
+input.is-invalid,
+textarea.is-invalid {
+  border-color: #c0392b;
+}
+[data-theme="dark"] input.is-invalid,
+[data-theme="dark"] textarea.is-invalid {
+  border-color: #ff6b6b;
+}
+
+/* ---------- Textarea ---------- */
+
+textarea {
+  resize: vertical;
+  min-height: 2.5rem;
+  font-family: inherit;
+}
+
+/* ---------- Select: своя стрелка ---------- */
+
+select {
+  padding-right: 2.2rem;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path fill='%23666' d='M6 8L0 0h12z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+  background-size: 10px 7px;
+  cursor: pointer;
+}
+[data-theme="dark"] select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path fill='%239aa0a6' d='M6 8L0 0h12z'/></svg>");
+}
+/* Скрываем системную стрелку в IE/старом Edge */
+select::-ms-expand { display: none; }
+
+/* Опции select — задаём явно, иначе в тёмной теме они белые */
+select option {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ---------- Чекбоксы и радио ---------- */
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--accent);           /* красит галочку/точку */
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Файл ---------- */
+
+input[type="file"] {
+  color: var(--text);
+  font-family: inherit;
+  font-size: .9rem;
+}
+input[type="file"]::file-selector-button {
+  padding: .45rem .9rem;
+  margin-right: .75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-family: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: background .15s;
+}
+input[type="file"]::file-selector-button:hover {
+  background: var(--border);
+}
+
+/* ---------- Метки ---------- */
+
+label {
+  display: block;
+  color: var(--text);
+  font-size: .95rem;
+  margin-bottom: .75rem;
+}
+label > input,
+label > textarea,
+label > select {
+  margin-top: .3rem;
+}
+
+/* ---------- Автозаполнение в Chrome ---------- */
+/* Chrome красит фон автозаполненных полей в жёлтый — перебиваем */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px var(--bg) inset;
+  box-shadow: 0 0 0 1000px var(--bg) inset;
+  transition: background-color 9999s ease-in-out 0s;
+  caret-color: var(--text);
+}

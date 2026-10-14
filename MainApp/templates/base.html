@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html>
+<html lang="ru" data-theme="{{ theme }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Test/it{% endblock %}</title>
+
+  {% block extra_head %}
+  {% endblock %}
+</head>
+{% include "header.html" %}
+<body>
+
+  <main class="container">
+    <table width="100%">
+        <tr>
+        <td width="5%"></td>
+        <td>{% block content %}{% endblock %}</td>
+        <td width="5%"></td>
+        </tr>
+    </table>
+  </main>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
