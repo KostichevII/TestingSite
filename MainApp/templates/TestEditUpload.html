@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Редактирование теста — Test/it{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/TestLoad.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="upload-page">
+  <div class="upload-card">
+    <h1>Редактировать тест</h1>
+    <p class="subtitle">
+      Загрузите JSON-файл, сохранённый ранее. Правильные ответы будут
+      расшифрованы, и откроется форма редактирования.
+    </p>
+
+    {% if error %}
+      <div class="alert alert-error">
+        <strong>Не удалось открыть:</strong> {{ error }}
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'quiz_edit_upload' %}"
+          enctype="multipart/form-data" class="upload-form">
+      {% csrf_token %}
+
+      <label class="file-drop" id="file-drop">
+        <input type="file" name="file" accept=".json,application/json" required>
+        <span class="file-drop-icon">✏️</span>
+        <span class="file-drop-text" id="file-drop-text">
+          Перетащите JSON-файл или нажмите, чтобы выбрать
+        </span>
+      </label>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        Открыть для редактирования
+      </button>
+    </form>
+
+    <p class="hint">
+      Файла нет? <a href="{% url 'quiz_create' %}">Создайте новый тест</a>.
+    </p>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const input = document.querySelector('#file-drop input[type="file"]');
+    const text = document.getElementById('file-drop-text');
+    if (!input || !text) return;
+    input.addEventListener('change', () => {
+      text.textContent = input.files[0]?.name || 'Файл не выбран';
+    });
+  })();
+</script>
+{% endblock %}

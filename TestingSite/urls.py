@@ -21,6 +21,11 @@ from MainApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("TestGeneration", TemplateView.as_view(template_name="TestGeneration.html")),
+    path("TestIt/TestGeneration", TemplateView.as_view(template_name="TestGeneration.html"), name="quiz_create"),
+    path("TestIt/TestLoad", views.quiz_upload, name="quiz_upload"),
+    path("TestIt/solveTest/<str:token>/", views.quiz_solve, name="quiz_solve"),
+    path("TestIt/TestEdit", views.quiz_edit_upload, name="quiz_edit_upload"),
+    path("TestIt/TestEdit/<str:token>", views.quiz_edit, name="quiz_edit"),
+    path("TestIt/TestEdit/exit/", views.quiz_edit, name="quiz_edit_exit"),
     path("set-theme/", views.set_theme, name="set_theme"),
 ]

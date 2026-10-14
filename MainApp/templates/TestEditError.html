@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Сеанс редактирования истёк — Test/it{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/quizUpload.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="upload-page">
+  <div class="upload-card">
+    <h1>Сеанс истёк</h1>
+    <p class="subtitle">{{ error }}</p>
+    <a href="{% url 'quiz_edit_upload' %}" class="btn btn-primary btn-block">
+      Загрузить файл заново
+    </a>
+  </div>
+</div>
+{% endblock %}

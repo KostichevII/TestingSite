@@ -130,3 +130,18 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# ----- Кеш -----
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "testit-cache",
+        "TIMEOUT": 7200,   # 1 час по умолчанию
+    },
+}
+# ----- Сессии -----
+# cached_db: чтение из кеша, запись в БД — быстро и надёжно.
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+SESSION_COOKIE_AGE = 3600
+SESSION_SAVE_EVERY_REQUEST = True
